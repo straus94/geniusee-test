@@ -1,0 +1,46 @@
+.content {
+  max-width: 1200px;
+  margin: 0 auto;
+  min-width: 420px;
+  background-color: #cdcdcd;
+}
+
+.header {
+  height: 100px;
+
+  h1 {
+    font-size: 32px;
+  }
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  width: 70%;
+  margin: 0 auto;
+
+  &__block {
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__phones {
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__phone-remove {
+    position: absolute;
+    right: 0;
+    top: 0;
+    padding: 0;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+
+  &__submit {
+    display: inline-block;
+    width: 120px;
+    align-self: flex-end;
+  }
+}
