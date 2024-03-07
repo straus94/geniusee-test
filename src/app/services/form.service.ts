@@ -1,47 +1,32 @@
 import { Injectable } from '@angular/core';
-import {FormGroup} from '@angular/forms';
+import {FormControl, FormGroup, Validators} from '@angular/forms';
+import {GAP, PHONE_PATTERN} from '../core/constants';
 
 @Injectable({
   providedIn: 'root',
 })
 export class FormService {
 
-  private invalidControlKey: any;
-
   constructor() {}
 
-  // public setFocusOnError(controls = null): void {
-  //   if (!controls) {
-  //     controls = this.form.controls;
-  //   }
+  public scrollToErrorField(form: FormGroup): void {
+    const controls = form.controls;
+    const errorKey = Object.keys(controls).find(key => controls[key].errors);
+    const invalidControl = document.querySelector('[formcontrolname="' + errorKey + '"]');
 
-  //   for (const key of Object.keys(controls)) {
-  //     const control = controls[key];
+    if (!invalidControl) {
+      return
+    }
 
-  //     if (!control.invalid) {
-  //       continue;
-  //     }
+    const y = invalidControl.getBoundingClientRect().top + window.pageYOffset - GAP;
+    window.scrollTo({top: y, behavior: 'smooth'});
+  }
 
-  //     if (!control.errors && control instanceof FormGroup) {
-  //       this.setFocusOnError((control as FormGroup).controls);
-  //     } else {
-  //       this.invalidControlKey = key;
-  //       const invalidControl = document.querySelector(
-  //         '[formcontrolname="' + key + '"], [formgroupname="' + key + '"]'
-  //       );
+  public getNewPhoneNumberControl(): FormControl {
+    // return new FormControl<string>('', [Validators.required, Validators.pattern("^[0-9]*$"), Validators.minLength(10), Validators.maxLength(10)]);
+    return new FormControl<string>('', Validators.compose([
+      Validators.required,
+      Validators.pattern(PHONE_PATTERN)]));
+  }
 
-  //       if (!invalidControl) {
-  //         return;
-  //       }
-
-  //       const card = (invalidControl as HTMLElement).closest('.ps-card');
-  //       const y =
-  //         ((card || invalidControl) as Element).getBoundingClientRect().top +
-  //         window.pageYOffset -
-  //         10;
-  //       window.scrollTo({ top: y, behavior: 'smooth' });
-  //     }
-  //     break;
-  //   }
-  // }
 }

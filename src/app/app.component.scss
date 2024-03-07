@@ -27,6 +27,17 @@
   &__phones {
     display: flex;
     flex-direction: column;
+    margin: 0 0 22px 0;
+  }
+
+  &__phone {
+    &:last-of-type {
+      ::ng-deep {
+        .mat-mdc-form-field-subscript-wrapper {
+          height: 10px;
+        }
+      }
+    }
   }
 
   &__phone-remove {
@@ -36,6 +47,10 @@
     padding: 0;
     top: 50%;
     transform: translateY(-50%);
+  }
+
+  &__add-phone {
+    width: 140px;
   }
 
   &__submit {

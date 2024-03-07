@@ -5,7 +5,6 @@
 
   <form class="form" [formGroup]="form" (ngSubmit)="onSubmit()">
     <h2>Personal information</h2>
-    <!-- <div class="form__block" formGroupName="personalInfo"> -->
     <div class="form__block">
       <mat-form-field appearance="fill">
         <mat-label>First Name</mat-label>
@@ -19,7 +18,6 @@
     </div>
 
     <h2>Contact information</h2>
-    <!-- <div class="form__block" formGroupName="contactInfo"> -->
     <div class="form__block">
       <mat-form-field appearance="fill">
         <mat-label>Email for receipt</mat-label>
@@ -29,12 +27,12 @@
       <div class="form__phones" formArrayName="phoneNumbers">
         <mat-form-field *ngFor="let phone of phoneNumbers.controls; let i=index" appearance="fill" class="form__phone">
           <mat-label>Phone Number</mat-label>
-          <input matInput [formControl]="phone">
+          <input matInput [formControl]="phone" placeholder="XXXXXXXXXX">
           <button *ngIf="phoneNumbers.length > 1" mat-icon-button type="button" (click)="removePhoneNumber(i)" class="form__phone-remove">
             <mat-icon>remove</mat-icon>
           </button>
         </mat-form-field>
-        <button *ngIf="phoneNumbers.length < 3" mat-raised-button type="button" color="primary" (click)="addPhoneNumber()">
+        <button *ngIf="phoneNumbers.length < 3" mat-raised-button type="button" color="primary" (click)="addPhoneNumber()" class="form__add-phone">
           Add Phone Number
         </button>
       </div>
@@ -53,16 +51,15 @@
     </div>
 
     <h2>Payment details</h2>
-    <!-- <div class="form__block" formGroupName="paymentDetails"> -->
     <div class="form__block">
       <mat-form-field appearance="fill">
         <mat-label>Credit Card</mat-label>
-        <input matInput formControlName="creditCard" (input)="formatCreditCardNumber">
+        <input matInput formControlName="creditCard" maxlength="19" (input)="formatCreditCardNumber">
       </mat-form-field>
 
       <mat-form-field appearance="fill">
         <mat-label>CVV2 code</mat-label>
-        <input matInput formControlName="cvv2">
+        <input matInput formControlName="cvv2" maxlength="3">
       </mat-form-field>
 
       <mat-checkbox formControlName="agreeTerms">
