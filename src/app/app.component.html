@@ -8,12 +8,14 @@
     <div class="form__block">
       <mat-form-field appearance="fill">
         <mat-label>First Name</mat-label>
-        <input matInput formControlName="firstName">
+        <input matInput formControlName="firstName" (blur)="blur('firstName')">
+        <mat-error *ngIf="(errorMessages$ | async)?.['firstName'] as msg">{{msg}}</mat-error>
       </mat-form-field>
 
       <mat-form-field appearance="fill">
         <mat-label>Last Name</mat-label>
-        <input matInput formControlName="lastName">
+        <input matInput formControlName="lastName" (blur)="blur('lastName')">
+        <mat-error *ngIf="(errorMessages$ | async)?.['lastName'] as msg">{{msg}}</mat-error>
       </mat-form-field>
     </div>
 
@@ -21,13 +23,15 @@
     <div class="form__block">
       <mat-form-field appearance="fill">
         <mat-label>Email for receipt</mat-label>
-        <input matInput type="email" formControlName="email">
+        <input matInput type="email" formControlName="email" (blur)="blur('email')">
+        <mat-error *ngIf="(errorMessages$ | async)?.['firstName'] as msg">{{msg}}</mat-error>
       </mat-form-field>
 
       <div class="form__phones" formArrayName="phoneNumbers">
         <mat-form-field *ngFor="let phone of phoneNumbers.controls; let i=index" appearance="fill" class="form__phone">
           <mat-label>Phone Number</mat-label>
-          <input matInput [formControl]="phone" placeholder="XXXXXXXXXX">
+          <input matInput [formControl]="phone" placeholder="XXXXXXXXXX" (blur)="blur('firstName')">
+          <mat-error *ngIf="(errorMessages$ | async)?.['firstName'] as msg">{{msg}}</mat-error>
           <button *ngIf="phoneNumbers.length > 1" mat-icon-button type="button" (click)="removePhoneNumber(i)" class="form__phone-remove">
             <mat-icon>remove</mat-icon>
           </button>
@@ -39,14 +43,16 @@
 
       <mat-form-field appearance="fill">
         <mat-label>Country</mat-label>
-        <mat-select formControlName="country">
+        <mat-select formControlName="country" (blur)="blur('country')">
           <mat-option *ngFor="let country of countries | async; trackBy: countryTrackBy" [value]="country.name.common">{{ country.name.common }}</mat-option>
         </mat-select>
+        <mat-error *ngIf="(errorMessages$ | async)?.['country'] as msg">{{msg}}</mat-error>
       </mat-form-field>
 
       <mat-form-field appearance="fill">
         <mat-label>Address</mat-label>
-        <textarea matInput formControlName="address"></textarea>
+        <textarea matInput formControlName="address" (blur)="blur('address')"></textarea>
+        <mat-error *ngIf="(errorMessages$ | async)?.['address'] as msg">{{msg}}</mat-error>
       </mat-form-field>
     </div>
 
@@ -54,20 +60,23 @@
     <div class="form__block">
       <mat-form-field appearance="fill">
         <mat-label>Credit Card</mat-label>
-        <input matInput formControlName="creditCard" maxlength="19" (input)="formatCreditCardNumber">
+        <input matInput formControlName="creditCard" maxlength="19" (input)="formatCreditCardNumber" (blur)="blur('creditCard')">
+        <mat-error *ngIf="(errorMessages$ | async)?.['creditCard'] as msg">{{msg}}</mat-error>
       </mat-form-field>
 
       <mat-form-field appearance="fill">
         <mat-label>CVV2 code</mat-label>
-        <input matInput formControlName="cvv2" maxlength="3">
+        <input matInput formControlName="cvv2" maxlength="3" (blur)="blur('cvv2')">
+        <mat-error *ngIf="(errorMessages$ | async)?.['cvv2'] as msg">{{msg}}</mat-error>
       </mat-form-field>
 
       <mat-checkbox formControlName="agreeTerms">
         I agree to the terms of use
       </mat-checkbox>
+      <mat-error *ngIf="(errorMessages$ | async)?.['agreeTerms'] as msg">{{msg}}</mat-error>
     </div>
 
-    <button class="form__submit" mat-raised-button type="submit" color="primary">Submit</button>
+    <button class="form__submit" mat-raised-button type="submit" color="primary" [disabled]="isLoading$ | async">Submit</button>
   </form>
 
 </div>

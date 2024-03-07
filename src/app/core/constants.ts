@@ -1,27 +1,31 @@
-export const VALIDATION_MESSAGES = {
+import {List} from "../app.interfaces";
+
+export const VALIDATION_MESSAGES: List = {
   firstName: {
-    required: 'Field is reqired'
+    required: 'First Name is reqired'
   },
   lastName: {
-    required: 'Field is reqired'
+    required: 'Last name is reqired'
   },
 
   email: {
-    required: 'Field is reqired'
+    required: 'Email is reqired'
   },
   // phoneNumbers: new FormArray([new FormControl<string>('', Validators.required)], Validators.required),
   country: {
-    required: 'Field is reqired'
+    required: 'Country is reqired'
   },
   address: {
-    required: 'Field is reqired'
+    required: 'Adress is reqired'
   },
 
   creditCard: {
-    required: 'Field is reqired'
+    required: 'Creadit card is reqired',
+    invalidCreditCardNumber: 'Not a valid card number'
   },
   cvv2: {
-    required: 'Field is reqired'
+    required: 'CVV is reqired',
+    invalidCvvNumber: 'Not a valid CVV number'
   },
   agreeTerms: {
     required: 'Field is reqired'

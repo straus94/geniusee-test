@@ -16,11 +16,11 @@ import {
 } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { ApiService } from './services/api.service';
-import { BehaviorSubject, Subject, debounceTime, distinctUntilChanged, take, takeUntil } from 'rxjs';
-import { ICountry } from './app.interfaces';
+import { BehaviorSubject, Observable, Subject, debounceTime, distinctUntilChanged, take, takeUntil } from 'rxjs';
+import { ICountry, List } from './app.interfaces';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { RxReactiveFormsModule } from '@rxweb/reactive-form-validators';
-import { creditCardNumberValidator, cvvNumberValidator } from './core/validators';
+import { EmailValidator, creditCardNumberValidator, cvvNumberValidator } from './core/validators';
 import {FormService} from './services/form.service';
 
 @Component({
@@ -39,6 +39,7 @@ import {FormService} from './services/form.service';
     MatToolbarModule,
     RxReactiveFormsModule,
   ],
+  providers: [FormService],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
 })
@@ -47,7 +48,7 @@ export class AppComponent implements OnDestroy {
     firstName: new FormControl<string>('', Validators.required),
     lastName: new FormControl<string>('', Validators.required),
 
-    email: new FormControl<string>('', [Validators.email, Validators.required]),
+    email: new FormControl<string>('', [Validators.email, Validators.required, EmailValidator.emailValidator(this.apiService)]),
     phoneNumbers: new FormArray([this.formService.getNewPhoneNumberControl()], Validators.required),
     country: new FormControl<string>('', Validators.required),
     address: new FormControl<string>('', Validators.required),
@@ -65,7 +66,10 @@ export class AppComponent implements OnDestroy {
   public countries: BehaviorSubject<ICountry[]> = new BehaviorSubject<
     ICountry[]
   >([]);
+
   public destroy: Subject<boolean> = new Subject<boolean>();
+  public isLoading$: Observable<boolean> = this.apiService.isLoading$;
+  public errorMessages$: Observable<List<string>> = this.formService.errorMessages$;
 
   constructor(private apiService: ApiService, private formService: FormService) {
     this.init();
@@ -107,28 +111,54 @@ export class AppComponent implements OnDestroy {
       console.log(email);
     });
 
+    this.form.statusChanges.pipe(takeUntil(this.destroy)).subscribe(status => {
+      console.log(status);
+    })
+
     this.form.valid
   }
 
-  addPhoneNumber() {
+  public addPhoneNumber() {
     this.phoneNumbers.push(this.formService.getNewPhoneNumberControl());
   }
 
-  removePhoneNumber(index: number) {
+  public removePhoneNumber(index: number) {
     this.phoneNumbers.removeAt(index);
   }
 
-  onSubmit() {
+  public onSubmit() {
     console.log(this.form);
-    if (this.form.valid) {
-      console.log(this.form.value);
-    } else {
+    if (this.form.invalid) {
       this.formService.scrollToErrorField(this.form);
+      const invalidKeys = Object.keys(this.form.controls).filter(key => this.form.controls[key].errors) //.map(key => key);
+      console.log(invalidKeys);
+      return;
     }
+
+    this.apiService.fakeSubmit().subscribe();
   }
 
   public countryTrackBy(index: number, item: ICountry): string {
     return item.name.common;
+  }
+
+  // public getErrorMessage(key: string): string {
+  //   const control = this.form.get(key);
+
+  //   if (!control) {
+  //     return '';
+  //   }
+
+  //   return this.formService.getErrorMessage(key, control);
+  // }
+
+  public blur(key: string): void {
+    const control = this.form.get(key);
+    if (!control || !control.errors) {
+      return;
+    }
+
+    this.formService.setErrorMessage(key, control.errors)
   }
 
   ngOnDestroy(): void {

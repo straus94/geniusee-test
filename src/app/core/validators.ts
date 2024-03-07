@@ -1,7 +1,11 @@
-import {AbstractControl, ValidatorFn} from "@angular/forms";
+import {AbstractControl, AsyncValidatorFn, ValidatorFn} from "@angular/forms";
+import {List} from "../app.interfaces";
+import {Observable} from "rxjs";
+import {inject} from "@angular/core";
+import {ApiService} from "../services/api.service";
 
 export function creditCardNumberValidator(): ValidatorFn {
-  return (control: AbstractControl): {[key: string]: any} | null => {
+  return (control: AbstractControl): List | null => {
     if (!control.value) {
       return null;
     }
@@ -9,7 +13,7 @@ export function creditCardNumberValidator(): ValidatorFn {
     let cardNumber = control.value.replace(/\D/g, '');
 
     if (cardNumber.length !== 16 || isNaN(Number(cardNumber))) {
-      return { 'invalidCreditCardNumber': { value: control.value } };
+      return { 'invalidCreditCardNumber': true };
     }
 
     cardNumber = cardNumber.replace(/(\d{4})/g, '$1 ');
@@ -27,7 +31,7 @@ export function creditCardNumberValidator(): ValidatorFn {
 }
 
 export function cvvNumberValidator(): ValidatorFn {
-  return (control: AbstractControl): {[key: string]: any} | null => {
+  return (control: AbstractControl<string>): List | null => {
     if (!control.value) {
       return null;
     }
@@ -51,3 +55,12 @@ export function cvvNumberValidator(): ValidatorFn {
     return null;
   };
 }
+
+export class EmailValidator {
+  static emailValidator(apiService: ApiService): AsyncValidatorFn {
+    return (control: AbstractControl<string>): Observable<List | null> => {
+      return apiService.fakeHttp(control.value);
+    }
+  }
+}
+

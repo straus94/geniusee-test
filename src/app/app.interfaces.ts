@@ -9,3 +9,5 @@ export interface ICountry {
     common: string;
   }
 }
+
+export type List<T = any> = {[key: string]: T};

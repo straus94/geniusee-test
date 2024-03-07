@@ -1,11 +1,14 @@
 import { Injectable } from '@angular/core';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
-import {GAP, PHONE_PATTERN} from '../core/constants';
+import {GAP, PHONE_PATTERN, VALIDATION_MESSAGES} from '../core/constants';
+import {BehaviorSubject, Observable} from 'rxjs';
+import {List} from '../app.interfaces';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable()
 export class FormService {
+
+  private errorMessages: BehaviorSubject<List<string>> = new BehaviorSubject<List<string>>({});
+  public errorMessages$: Observable<List<string>> = this.errorMessages.asObservable();
 
   constructor() {}
 
@@ -23,10 +26,14 @@ export class FormService {
   }
 
   public getNewPhoneNumberControl(): FormControl {
-    // return new FormControl<string>('', [Validators.required, Validators.pattern("^[0-9]*$"), Validators.minLength(10), Validators.maxLength(10)]);
     return new FormControl<string>('', Validators.compose([
       Validators.required,
       Validators.pattern(PHONE_PATTERN)]));
+  }
+
+  public setErrorMessage(key: string, errors: List<string>): void {
+    const [[firstKey]] = Object.entries(errors);
+    this.errorMessages.next({[key]: VALIDATION_MESSAGES[key][firstKey]})
   }
 
 }
