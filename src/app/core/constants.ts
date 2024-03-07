@@ -9,9 +9,14 @@ export const VALIDATION_MESSAGES: List = {
   },
 
   email: {
-    required: 'Email is reqired'
+    required: 'Email is reqired',
+    email: 'Email is not valid',
+    asyncEmail: 'Email already exists'
   },
-  // phoneNumbers: new FormArray([new FormControl<string>('', Validators.required)], Validators.required),
+  phoneNumbers: {
+    required: 'Phone is reqired',
+    pattern: 'Phone number is not valid'
+  },
   country: {
     required: 'Country is reqired'
   },
@@ -34,3 +39,4 @@ export const VALIDATION_MESSAGES: List = {
 
 export const GAP = 80;
 export const PHONE_PATTERN = /^\d{10}$/;
+export const PHONE_NUMBERS_CONTROL = 'phoneNumbers';

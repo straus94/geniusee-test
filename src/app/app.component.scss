@@ -2,6 +2,7 @@
   max-width: 1200px;
   margin: 0 auto;
   min-width: 420px;
+  padding: 0 0 30px 0;
   background-color: #cdcdcd;
 }
 
@@ -22,6 +23,18 @@
   &__block {
     display: flex;
     flex-direction: column;
+
+    .checkbox-error {
+      font-size: 12px;
+      margin-left: 12px;
+    }
+
+    h2 {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      background-color: #cdcdcd;
+    }
   }
 
   &__phones {
@@ -51,11 +64,39 @@
 
   &__add-phone {
     width: 140px;
+    align-self: flex-end;
+  }
+
+  &__footer {
+    display: flex;
+    justify-content: flex-end;
+    width: 100%;
   }
 
   &__submit {
     display: inline-block;
     width: 120px;
-    align-self: flex-end;
+
+  }
+}
+
+.loader {
+  width: 32px;
+  height: 32px;
+  border: 5px solid #fff;
+  border-bottom-color: transparent;
+  border-radius: 50%;
+  display: inline-block;
+  box-sizing: border-box;
+  animation: rotation 1s linear infinite;
+  margin: 0 44px;
+}
+
+@keyframes rotation {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
   }
 }

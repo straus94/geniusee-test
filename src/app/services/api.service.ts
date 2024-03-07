@@ -7,19 +7,13 @@ import { ICountry } from '../app.interfaces';
   providedIn: 'root',
 })
 export class ApiService {
-  private isLoading: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(
-    false
-  );
+  private isLoading: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   public isLoading$: Observable<boolean> = this.isLoading.asObservable();
 
   constructor(private http: HttpClient) {}
 
   public getCountries(): Observable<ICountry[]> {
     return this.http.get<ICountry[]>('https://restcountries.com/v3.1/all');
-  }
-
-  public fakeHttp(value: string): Observable<null> {
-    return of(null).pipe(delay(1000));
   }
 
   public fakeSubmit(): Observable<boolean> {

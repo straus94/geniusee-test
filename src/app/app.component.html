@@ -3,9 +3,9 @@
     <h1>Order</h1>
   </mat-toolbar>
 
-  <form class="form" [formGroup]="form" (ngSubmit)="onSubmit()">
-    <h2>Personal information</h2>
+  <form #formEl="ngForm" class="form" [formGroup]="form" (ngSubmit)="onSubmit()">
     <div class="form__block">
+      <h2>Personal information</h2>
       <mat-form-field appearance="fill">
         <mat-label>First Name</mat-label>
         <input matInput formControlName="firstName" (blur)="blur('firstName')">
@@ -19,19 +19,19 @@
       </mat-form-field>
     </div>
 
-    <h2>Contact information</h2>
     <div class="form__block">
+      <h2>Contact information</h2>
       <mat-form-field appearance="fill">
         <mat-label>Email for receipt</mat-label>
         <input matInput type="email" formControlName="email" (blur)="blur('email')">
-        <mat-error *ngIf="(errorMessages$ | async)?.['firstName'] as msg">{{msg}}</mat-error>
+        <mat-error *ngIf="(errorMessages$ | async)?.['email'] as msg">{{msg}}</mat-error>
       </mat-form-field>
 
       <div class="form__phones" formArrayName="phoneNumbers">
-        <mat-form-field *ngFor="let phone of phoneNumbers.controls; let i=index" appearance="fill" class="form__phone">
+        <mat-form-field *ngFor="let phone of phoneNumbers.controls; let i=index" [attr.data-phone-index]="i" appearance="fill" class="form__phone">
           <mat-label>Phone Number</mat-label>
-          <input matInput [formControl]="phone" placeholder="XXXXXXXXXX" (blur)="blur('firstName')">
-          <mat-error *ngIf="(errorMessages$ | async)?.['firstName'] as msg">{{msg}}</mat-error>
+          <input matInput [formControl]="phone" placeholder="XXXXXXXXXX" (blur)="blur('phoneNumbers', i)" required maxlength="10">
+          <mat-error *ngIf="(errorPhoneMessages$ | async)?.[i] as msg">{{msg}}</mat-error>
           <button *ngIf="phoneNumbers.length > 1" mat-icon-button type="button" (click)="removePhoneNumber(i)" class="form__phone-remove">
             <mat-icon>remove</mat-icon>
           </button>
@@ -73,10 +73,16 @@
       <mat-checkbox formControlName="agreeTerms">
         I agree to the terms of use
       </mat-checkbox>
-      <mat-error *ngIf="(errorMessages$ | async)?.['agreeTerms'] as msg">{{msg}}</mat-error>
+      <mat-error *ngIf="(errorMessages$ | async)?.['agreeTerms'] as msg" class="checkbox-error">{{msg}}</mat-error>
     </div>
 
-    <button class="form__submit" mat-raised-button type="submit" color="primary" [disabled]="isLoading$ | async">Submit</button>
+    <div class="form__footer">
+      <button *ngIf="!(isLoading$ | async); else loading" class="form__submit" mat-raised-button type="submit" color="primary" [disabled]="isLoading$ | async">Submit</button>
+      <ng-template #loading>
+        <span class="loader"></span>
+      </ng-template>
+    </div>
+
   </form>
 
 </div>
