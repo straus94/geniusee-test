@@ -1,43 +1,29 @@
-import { Component, OnDestroy, ViewChild } from '@angular/core';
-import { MatInputModule } from '@angular/material/input';
-import { MatButtonModule } from '@angular/material/button';
-import { MatSelectModule } from '@angular/material/select';
-import { MatCheckboxModule } from '@angular/material/checkbox';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatIconModule } from '@angular/material/icon';
+import { Component, ViewChild } from '@angular/core';
 import { AbstractControl, FormArray, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { ApiService } from './services/api.service';
-import { BehaviorSubject, Observable, Subject, catchError, of, takeUntil } from 'rxjs';
+import { BehaviorSubject, Observable, catchError, of } from 'rxjs';
 import { ICountry, List } from './app.interfaces';
-import { MatToolbarModule } from '@angular/material/toolbar';
-import { RxReactiveFormsModule } from '@rxweb/reactive-form-validators';
 import { asyncEmailValidator, creditCardNumberValidator, cvvNumberValidator } from './core/validators';
 import { FormService } from './services/form.service';
 import { isNumber } from './core/helpers';
-import {DEFAULT_COUNTRIES} from './core/constants';
+import { DEFAULT_COUNTRIES } from './core/constants';
+import {MaterialModule} from './modules/material.module';
 
 @Component({
   selector: 'app-root',
   standalone: true,
   imports: [
-    MatFormFieldModule,
-    MatCheckboxModule,
-    MatSelectModule,
-    MatButtonModule,
-    MatInputModule,
+    MaterialModule,
     ReactiveFormsModule,
     FormsModule,
-    MatIconModule,
     CommonModule,
-    MatToolbarModule,
-    RxReactiveFormsModule,
   ],
   providers: [FormService],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
 })
-export class AppComponent implements OnDestroy {
+export class AppComponent {
   public form: FormGroup = new FormGroup({
     firstName: new FormControl<string>('', Validators.required),
     lastName: new FormControl<string>('', Validators.required),
@@ -53,7 +39,6 @@ export class AppComponent implements OnDestroy {
   });
   public countries: BehaviorSubject<ICountry[]> = new BehaviorSubject<ICountry[]>([]);
 
-  public destroy: Subject<boolean> = new Subject<boolean>();
   public isLoading$: Observable<boolean> = this.apiService.isLoading$;
   public errorMessages$: Observable<List<string | string[]>> = this.formService.errorMessages$;
   public errorPhoneMessages$: Observable<string[]> = this.formService.errorPhoneMessages$;
@@ -66,10 +51,6 @@ export class AppComponent implements OnDestroy {
 
   private get cardNumberControl(): AbstractControl<string> | null {
     return this.form.get('creditCard');
-  }
-
-  private get emailControl(): AbstractControl<string> | null {
-    return this.form.get('email');
   }
 
   public get phoneNumbers() {
@@ -143,10 +124,5 @@ export class AppComponent implements OnDestroy {
     const currentKey = isNumber(index) ? `${key}.${index}` : key;
 
     this.formService.setErrorMessages([currentKey], this.form);
-  }
-
-  ngOnDestroy(): void {
-    this.destroy.next(true);
-    this.destroy.complete();
   }
 }
