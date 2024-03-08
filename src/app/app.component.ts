@@ -8,17 +8,12 @@ import { asyncEmailValidator, creditCardNumberValidator, cvvNumberValidator } fr
 import { FormService } from './services/form.service';
 import { isNumber } from './core/helpers';
 import { DEFAULT_COUNTRIES } from './core/constants';
-import {MaterialModule} from './modules/material.module';
+import { MaterialModule } from './modules/material.module';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [
-    MaterialModule,
-    ReactiveFormsModule,
-    FormsModule,
-    CommonModule,
-  ],
+  imports: [MaterialModule, ReactiveFormsModule, FormsModule, CommonModule],
   providers: [FormService],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
