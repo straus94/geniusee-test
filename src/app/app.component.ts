@@ -8,13 +8,14 @@ import { MatIconModule } from '@angular/material/icon';
 import { AbstractControl, FormArray, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { ApiService } from './services/api.service';
-import { BehaviorSubject, Observable, Subject, takeUntil } from 'rxjs';
+import { BehaviorSubject, Observable, Subject, catchError, of, takeUntil } from 'rxjs';
 import { ICountry, List } from './app.interfaces';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { RxReactiveFormsModule } from '@rxweb/reactive-form-validators';
 import { asyncEmailValidator, creditCardNumberValidator, cvvNumberValidator } from './core/validators';
 import { FormService } from './services/form.service';
 import { isNumber } from './core/helpers';
+import {DEFAULT_COUNTRIES} from './core/constants';
 
 @Component({
   selector: 'app-root',
@@ -89,7 +90,7 @@ export class AppComponent implements OnDestroy {
   private init(): void {
     this.apiService
       .getCountries()
-      .pipe(takeUntil(this.destroy))
+      .pipe(catchError(() => of(DEFAULT_COUNTRIES)))
       .subscribe((resp) => {
         this.countries.next(resp);
       });
@@ -106,7 +107,6 @@ export class AppComponent implements OnDestroy {
   }
 
   public onSubmit() {
-    console.log(this.form.get('email')?.getError('asyncEmail'));
     if (this.form.invalid) {
       this.formService.scrollToErrorField(this.form);
       const invalidKeys = Object.keys(this.form.controls)

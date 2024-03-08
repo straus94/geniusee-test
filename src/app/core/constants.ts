@@ -1,4 +1,4 @@
-import {List} from "../app.interfaces";
+import {ICountry, List} from "../app.interfaces";
 
 export const VALIDATION_MESSAGES: List = {
   firstName: {
@@ -40,3 +40,26 @@ export const VALIDATION_MESSAGES: List = {
 export const GAP = 80;
 export const PHONE_PATTERN = /^\d{10}$/;
 export const PHONE_NUMBERS_CONTROL = 'phoneNumbers';
+export const DEFAULT_COUNTRIES: ICountry[] = [
+  {
+    flag: 'ua',
+    region: 'Europa',
+    name: {
+      common: 'Ukraine'
+    }
+  },
+  {
+    flag: 'pl',
+    region: 'Europa',
+    name: {
+      common: 'Poland'
+    }
+  },
+  {
+    flag: 'uk',
+    region: 'Europa',
+    name: {
+      common: 'Unated kingdom'
+    }
+  }
+]
